@@ -1,0 +1,18 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  font-family: "__Luckiest_Guy_aa94fc", "__Luckiest_Guy_Fallback_aa94fc";
+  font-weight: 400;
+  font-style: normal;
+}
+
+body {
+  color: #767f8b;
+}
