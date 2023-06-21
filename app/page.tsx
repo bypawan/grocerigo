@@ -1,3 +1,4 @@
+import { Footer } from "@/components/footer";
 import { Hero } from "@/components/hero";
 import { NewsLetter } from "@/components/newsletter";
 import { Process } from "@/components/process";
@@ -14,6 +15,7 @@ export default function Home() {
       <Testimonials />
       <Story />
       <NewsLetter />
+      <Footer />
     </main>
   );
 }
