@@ -3,7 +3,7 @@ import React from "react";
 
 export const NewsLetter = () => {
   return (
-    <section className="">
+    <section className="mb-32">
       <div className="mx-auto max-w-xl flex flex-col items-center justify-center text-center">
         <p className="text-[#1880ff] tracking-[2px] mb-7 text-sm font-bold">
           NEWSLETTER
