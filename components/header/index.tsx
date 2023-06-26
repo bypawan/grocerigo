@@ -1,8 +1,7 @@
 import React from "react";
 import { Logo } from "../icons";
 import Link from "next/link";
-import Image from "next/image";
-import * as navImages from "@/assets/images/header";
+import Cart from "../new/cart";
 
 export const Header = () => {
   return (
@@ -28,13 +27,7 @@ export const Header = () => {
         </li>
       </ul>
       <div className="flex items-center gap-5 text-[#030c24]">
-        <Link
-          href="/"
-          className="flex items-center gap-2 hover:text-[#006cf0] transition-[color] duration-300"
-        >
-          <Image src={navImages.cart} alt="cart" />
-          My Cart
-        </Link>
+        <Cart />
         <Link
           href="/"
           className="hover:text-[#006cf0] transition-[color] duration-300"
