@@ -2,6 +2,7 @@ import { Header } from "@/components/header";
 import "./globals.css";
 import { Luckiest_Guy, Zilla_Slab } from "next/font/google";
 import BG from "@/assets/images/backgrounds/body.jpg";
+import { ReduxProvider } from "@/components/providers/reduxProvider";
 
 const LuckiestGuy = Luckiest_Guy({ subsets: ["latin"], weight: "400" });
 const ZillaSlab = Zilla_Slab({
@@ -25,8 +26,10 @@ export default function RootLayout({
         className={`${LuckiestGuy.className} ${ZillaSlab.className}`}
         style={{ background: `url(${BG.src})` }}
       >
-        <Header />
-        {children}
+        <ReduxProvider>
+          <Header />
+          {children}
+        </ReduxProvider>
       </body>
     </html>
   );
