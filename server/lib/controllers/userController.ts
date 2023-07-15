@@ -75,9 +75,6 @@ export class UserController {
   public async update_user(req: Request, res: Response) {
     if (
       (req.params.id && req.body.name) ||
-      req.body.name.first_name ||
-      req.body.name.middle_name ||
-      req.body.name.last_name ||
       req.body.email ||
       req.body.phone_number ||
       req.body.gender
@@ -120,14 +117,12 @@ export class UserController {
             modification_notes: user_data.modification_notes,
           };
 
-          console.log(user_params);
-
-          // try {
-          //   await this.user_service.updateUser(user_params);
-          //   successResponse("update user successful", null, res);
-          // } catch (err) {
-          //   mongoError(err, res);
-          // }
+          try {
+            await this.user_service.updateUser(user_params);
+            successResponse("update user successful", null, res);
+          } catch (err) {
+            mongoError(err, res);
+          }
         } else {
           failureResponse("invalid user", null, res);
         }
