@@ -23,7 +23,13 @@ export default class UserService {
 
   public async updateUser(user_params: IUser) {
     const query = { _id: user_params._id };
-    users.findOneAndUpdate(query, user_params);
+
+    try {
+      const user = await users.findOneAndUpdate(query, user_params);
+      return user;
+    } catch (error) {
+      throw error;
+    }
   }
 
   public async deleteUser(_id: String) {

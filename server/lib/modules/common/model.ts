@@ -5,9 +5,18 @@ export interface ModificationNote {
 }
 
 export const ModificationNote = {
-  modified_on: Date,
-  modified_by: String,
-  modification_note: String,
+  modified_on: {
+    type: Date,
+    required: true,
+  },
+  modified_by: {
+    type: String,
+    required: true,
+  },
+  modification_note: {
+    type: String,
+    required: true,
+  },
 };
 
 export enum response_status_codes {
