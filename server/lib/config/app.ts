@@ -1,14 +1,14 @@
 import * as express from "express";
 import * as bodyParser from "body-parser";
 import * as mongoose from "mongoose";
-import environment from "@/environment";
+import * as dotenv from "dotenv";
+dotenv.config();
 
 import { UserRoutes } from "@/routes/user_routes";
 import { CommonRoutes } from "@/routes/common_routes";
 
 class App {
   public app: express.Application;
-  public mongoUrl: string = `mongodb://localhost/${environment.getDBName()}`;
 
   private user_routes: UserRoutes = new UserRoutes();
   private common_routes: CommonRoutes = new CommonRoutes();
@@ -29,7 +29,12 @@ class App {
   }
 
   private mongoSetup(): void {
-    mongoose.connect(this.mongoUrl);
+    // mongoose.connect("mongodb://127.0.0.1:27017");
+
+    mongoose
+      .connect(`${process.env.DB_URL}`)
+      .then(() => console.log("Mongo DB connected successfully."))
+      .catch((error) => console.log("Error Connecting!", error));
   }
 }
 
