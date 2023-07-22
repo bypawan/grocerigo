@@ -81,8 +81,6 @@ export class UserController {
   }
 
   public async login_user(req: Request, res: Response) {
-    // this check whether all the fields were send through the request or not
-
     if (req.body.email && req.body.password) {
       try {
         const user_data = await Users.findOne({

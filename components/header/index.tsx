@@ -2,6 +2,7 @@ import React from "react";
 import { Logo } from "../icons";
 import Link from "next/link";
 import Cart from "../new/cart";
+import { Authentication } from "./auth";
 
 export const Header = () => {
   return (
@@ -28,6 +29,7 @@ export const Header = () => {
       </ul>
       <div className="flex items-center gap-5 text-[#030c24]">
         <Cart />
+        <Authentication />
         <Link
           href="/"
           className="hover:text-[#006cf0] transition-[color] duration-300"
