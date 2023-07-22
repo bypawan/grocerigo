@@ -1,8 +1,12 @@
-import { Header } from "@/components/header";
-import "./globals.css";
 import { Luckiest_Guy, Zilla_Slab } from "next/font/google";
+import { Toaster } from "react-hot-toast";
+
+import { Header } from "@/components/header";
 import BG from "@/assets/images/backgrounds/body.jpg";
 import { ReduxProvider } from "@/components/providers/reduxProvider";
+import NextAuthProvider from "@/components/providers/nextAuthProvider";
+
+import "./globals.css";
 
 const LuckiestGuy = Luckiest_Guy({ subsets: ["latin"], weight: "400" });
 const ZillaSlab = Zilla_Slab({
@@ -27,8 +31,11 @@ export default function RootLayout({
         style={{ background: `url(${BG.src})` }}
       >
         <ReduxProvider>
-          <Header />
-          {children}
+          <NextAuthProvider>
+            <Toaster toastOptions={{ duration: 4000 }} />
+            <Header />
+            {children}
+          </NextAuthProvider>
         </ReduxProvider>
       </body>
     </html>

@@ -4,6 +4,7 @@
 /node_modules
 /server/node_modules
 /server/dist
+/server/.env
 /.pnp
 .pnp.js
 
