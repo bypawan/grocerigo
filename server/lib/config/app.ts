@@ -5,12 +5,14 @@ import * as dotenv from "dotenv";
 dotenv.config();
 
 import { UserRoutes } from "@/routes/user_routes";
+import { ProductRoutes } from "@/routes/product_routes";
 import { CommonRoutes } from "@/routes/common_routes";
 
 class App {
   public app: express.Application;
 
   private user_routes: UserRoutes = new UserRoutes();
+  private product_routes: ProductRoutes = new ProductRoutes();
   private common_routes: CommonRoutes = new CommonRoutes();
 
   constructor() {
@@ -18,6 +20,7 @@ class App {
     this.config();
     this.mongoSetup();
     this.user_routes.route(this.app);
+    this.product_routes.route(this.app);
     this.common_routes.route(this.app);
   }
 

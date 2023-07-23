@@ -1,12 +1,11 @@
-// middleware.ts
-
-import { Request, Response, NextFunction } from "express";
 import * as jwt from "jsonwebtoken";
+import { Request, Response, NextFunction } from "express";
+
 import { permissions } from "./permissions";
 import { response_status_codes } from "@/modules/common/model";
 
 // Interface for user information in the decoded JWT token
-interface DecodedUser {
+export interface DecodedUser {
   userId: string;
   role: string;
 }
