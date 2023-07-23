@@ -1,14 +1,16 @@
 export const permissions = {
-  user: {
+  USER: {
     canViewProfile: true,
     canEditProfile: true,
     canDeleteProfile: true,
     canViewUsers: false,
+    canCreateProduct: false,
   },
-  admin: {
+  ADMIN: {
     canViewProfile: true,
     canEditProfile: true,
     canDeleteProfile: true,
     canViewUsers: true,
+    canCreateProduct: true,
   },
 };
