@@ -12,4 +12,14 @@ export default class ProductService {
       throw error;
     }
   }
+
+  public async filterProduct(query: any, exclude?: any) {
+    try {
+      const product:IProduct = await Products.findOne(query, exclude);
+
+      return product;
+    } catch (error) {
+      throw error;
+    }
+  }
 }

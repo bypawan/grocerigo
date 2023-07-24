@@ -6,7 +6,7 @@ import { response_status_codes } from "@/modules/common/model";
 
 // Interface for user information in the decoded JWT token
 export interface DecodedUser {
-  userId: string;
+  _id: string;
   role: string;
 }
 
@@ -41,7 +41,7 @@ export const hasPermission =
         (action === "canEditProfile" ||
           action === "canViewProfile" ||
           action === "canDeleteProfile") &&
-        req.params.id !== user.userId
+        req.params.id !== user._id
       ) {
         return res.status(response_status_codes.Forbidden).json({
           STATUS: "SUCCESS",

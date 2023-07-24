@@ -12,11 +12,15 @@ export class ProductRoutes {
       hasPermission("canCreateProduct"),
       (req: Request, res: Response) => {
         this.product_controller.create_product(req, res);
-      },
-
-      app.get("/api/products", (req: Request, res: Response) => {
-        this.product_controller.get_products(req, res);
-      })
+      }
     );
+
+    app.get("/api/products", (req: Request, res: Response) => {
+      this.product_controller.get_products(req, res);
+    });
+
+    app.get("/api/products/:id", (req: Request, res: Response) => {
+      this.product_controller.get_product(req, res);
+    });
   }
 }
