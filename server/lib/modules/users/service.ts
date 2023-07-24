@@ -14,7 +14,7 @@ export default class UserService {
 
   public async filterUser(query: any) {
     try {
-      const user = await Users.findById(query);
+      const user = await Users.findOne(query);
       return user;
     } catch (error) {
       throw error;

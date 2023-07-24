@@ -19,9 +19,8 @@ export class UserController {
   public async create_user(req: Request, res: Response) {
     // this check whether all the fields were send through the request or not
     if (req.body.name && req.body.email && req.body.password) {
-      const isUser = await Users.findOne({
-        email: req.body.email.toLowerCase(),
-      });
+      const user_filter = { email: req.body.email.toLowerCase() };
+      const isUser = await this.user_service.filterUser(user_filter);
 
       if (isUser)
         return failureResponse(
@@ -83,9 +82,8 @@ export class UserController {
   public async login_user(req: Request, res: Response) {
     if (req.body.email && req.body.password) {
       try {
-        const user_data = await Users.findOne({
-          email: req.body.email.toLowerCase(),
-        });
+        const user_filter = { email: req.body.email.toLowerCase() };
+        const user_data = await this.user_service.filterUser(user_filter);
 
         if (user_data) {
           const enteredPassword = req.body.password;
@@ -170,22 +168,17 @@ export class UserController {
       const user_filter = { _id: req.params.id };
 
       try {
-        const isUser = await Users.findOne({
+        const user_data = await this.user_service.filterUser(user_filter);
+        const existingUser = await this.user_service.filterUser({
           email: req.body.email.toLowerCase(),
         });
 
-        if (isUser)
+        if (existingUser && existingUser.email !== req.body.email.toLowerCase())
           return failureResponse(
             "User with same email already exist.",
             null,
             res
           );
-      } catch (err) {
-        mongoError(err, res);
-      }
-
-      try {
-        const user_data = await this.user_service.filterUser(user_filter);
 
         if (user_data) {
           user_data.modification_notes.unshift({

@@ -92,4 +92,58 @@ export class ProductController {
       });
     }
   }
+
+  public async get_product(req: Request, res: Response) {
+    if (req.params.id) {
+      const product_filter = { _id: req.params.id };
+      const token = req.headers.authorization?.split(" ")[1];
+
+      if (!token) {
+        try {
+          const product_data = await this.product_service.filterProduct(
+            product_filter,
+            { modification_notes: 0 }
+          );
+
+          if (product_data) {
+            return successResponse(
+              "Get product successful.",
+              product_data,
+              res
+            );
+          } else {
+            return failureResponse("Invalid product", null, res);
+          }
+        } catch (error) {
+          mongoError(error, res);
+        }
+      }
+
+      try {
+        let product_data: IProduct;
+        const user = jwt.verify(token, "SuperSecret") as DecodedUser;
+        const userRole = user.role;
+
+        if (userRole === "ADMIN")
+          product_data = await this.product_service.filterProduct(
+            product_filter
+          );
+        else
+          product_data = await this.product_service.filterProduct(
+            product_filter,
+            { modification_notes: 0 }
+          );
+
+        if (product_data) {
+          return successResponse("Get product successful.", product_data, res);
+        } else {
+          return failureResponse("Invalid product", null, res);
+        }
+      } catch (error) {
+        mongoError(error, res);
+      }
+    } else {
+      insufficientParameters(res);
+    }
+  }
 }
