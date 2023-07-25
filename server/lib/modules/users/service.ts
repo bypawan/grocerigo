@@ -2,11 +2,20 @@ import { IUser } from "./model";
 import Users from "./schema";
 
 export default class UserService {
-  public async createUser(user_params: IUser) {
+  public async createUser(userParams: IUser) {
     try {
-      const newUser = new Users(user_params);
-      const user_data = await newUser.save();
-      return user_data;
+      const newUser = new Users(userParams);
+      const user = await newUser.save();
+      return user;
+    } catch (error) {
+      throw error;
+    }
+  }
+
+  public async getUsers(query?: any) {
+    try {
+      const users = await Users.find(query);
+      return users;
     } catch (error) {
       throw error;
     }
@@ -21,11 +30,11 @@ export default class UserService {
     }
   }
 
-  public async updateUser(user_params: IUser) {
-    const query = { _id: user_params._id };
+  public async updateUser(userParams: IUser) {
+    const query = { _id: userParams._id };
 
     try {
-      const user = await Users.findOneAndUpdate(query, user_params, {
+      const user = await Users.findOneAndUpdate(query, userParams, {
         new: true,
       });
       return user;

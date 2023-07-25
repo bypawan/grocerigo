@@ -16,12 +16,12 @@ const productSchema = new Schema({
     type: Number,
     required: true,
   },
-  category: [String],
-  is_deleted: {
+  categories: [String],
+  isDeleted: {
     type: Boolean,
     default: false,
   },
-  modification_notes: [ModificationNote],
+  modificationNotes: [ModificationNote],
 });
 
 const Products = mongoose.model("Products", productSchema);

@@ -1,8 +1,8 @@
 enum Environments {
-  local_environment = "local",
-  dev_environment = "dev",
-  prod_environment = "prod",
-  qa_environment = "qa",
+  localEnvironment = "local",
+  devEnvironment = "dev",
+  prodEnvironment = "prod",
+  qaEnvironment = "qa",
 }
 
 class Environment {
@@ -13,11 +13,11 @@ class Environment {
   }
 
   getPort(): Number {
-    if (this.environment === Environments.prod_environment) {
+    if (this.environment === Environments.prodEnvironment) {
       return 8081;
-    } else if (this.environment === Environments.dev_environment) {
+    } else if (this.environment === Environments.devEnvironment) {
       return 8082;
-    } else if (this.environment === Environments.qa_environment) {
+    } else if (this.environment === Environments.qaEnvironment) {
       return 8083;
     } else {
       return 8000;
@@ -25,18 +25,18 @@ class Environment {
   }
 
   getDBName(): String {
-    if (this.environment === Environments.prod_environment) {
-      return "db_test_project_prod";
-    } else if (this.environment === Environments.dev_environment) {
-      return "db_test_project_dev";
-    } else if (this.environment === Environments.qa_environment) {
-      return "db_test_project_qa";
+    if (this.environment === Environments.prodEnvironment) {
+      return "dbTestProjectProd";
+    } else if (this.environment === Environments.devEnvironment) {
+      return "dbTestProjectDev";
+    } else if (this.environment === Environments.qaEnvironment) {
+      return "dbTestProjectQa";
     } else {
-      return "db_test_project_local";
+      return "dbTestProjectLocal";
     }
   }
 }
 
-const defaultInstance = new Environment(Environments.local_environment)
+const defaultInstance = new Environment(Environments.localEnvironment)
 
 export default defaultInstance;

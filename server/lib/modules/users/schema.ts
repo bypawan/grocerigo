@@ -21,11 +21,11 @@ const userSchema = new Schema({
     enum: ["USER", "ADMIN"],
     default: "USER",
   },
-  is_deleted: {
+  isDeleted: {
     type: Boolean,
     default: false,
   },
-  modification_notes: [ModificationNote],
+  modificationNotes: [ModificationNote],
 });
 
 userSchema.pre("save", function (next) {

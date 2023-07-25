@@ -2,7 +2,7 @@ import * as jwt from "jsonwebtoken";
 import { Request, Response, NextFunction } from "express";
 
 import { permissions } from "./permissions";
-import { response_status_codes } from "@/modules/common/model";
+import { responseStatusCodes } from "@/modules/common/model";
 
 // Interface for user information in the decoded JWT token
 export interface DecodedUser {
@@ -16,7 +16,7 @@ export const hasPermission =
     const token = req.headers.authorization?.split(" ")[1];
 
     if (!token) {
-      return res.status(response_status_codes.Unauthorized).json({
+      return res.status(responseStatusCodes.Unauthorized).json({
         STATUS: "SUCCESS",
         MESSAGE: "Unauthorized. Token not provided.",
         DATA: null,
@@ -29,7 +29,7 @@ export const hasPermission =
       const userRole = user.role;
 
       if (!userRole || !permissions[userRole][action]) {
-        return res.status(response_status_codes.Forbidden).json({
+        return res.status(responseStatusCodes.Forbidden).json({
           STATUS: "SUCCESS",
           MESSAGE: "Access forbidden. Insufficient permissions.",
           DATA: null,
@@ -43,7 +43,7 @@ export const hasPermission =
           action === "canDeleteProfile") &&
         req.params.id !== user._id
       ) {
-        return res.status(response_status_codes.Forbidden).json({
+        return res.status(responseStatusCodes.Forbidden).json({
           STATUS: "SUCCESS",
           MESSAGE:
             "Access forbidden. You can only view,modify or delete your own profile.",
@@ -53,7 +53,7 @@ export const hasPermission =
 
       next();
     } catch (error) {
-      return res.status(response_status_codes.Unauthorized).json({
+      return res.status(responseStatusCodes.Unauthorized).json({
         STATUS: "SUCCESS",
         MESSAGE: "Unauthorized. Invalid token.",
         DATA: null,
