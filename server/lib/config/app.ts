@@ -4,24 +4,24 @@ import * as mongoose from "mongoose";
 import * as dotenv from "dotenv";
 dotenv.config();
 
-import { UserRoutes } from "@/routes/user_routes";
-import { ProductRoutes } from "@/routes/product_routes";
-import { CommonRoutes } from "@/routes/common_routes";
+import { UserRoutes } from "@/routes/userRoutes";
+import { ProductRoutes } from "@/routes/productRoutes";
+import { CommonRoutes } from "@/routes/commonRoutes";
 
 class App {
   public app: express.Application;
 
-  private user_routes: UserRoutes = new UserRoutes();
-  private product_routes: ProductRoutes = new ProductRoutes();
-  private common_routes: CommonRoutes = new CommonRoutes();
+  private userRoutes: UserRoutes = new UserRoutes();
+  private productRoutes: ProductRoutes = new ProductRoutes();
+  private commonRoutes: CommonRoutes = new CommonRoutes();
 
   constructor() {
     this.app = express();
     this.config();
     this.mongoSetup();
-    this.user_routes.route(this.app);
-    this.product_routes.route(this.app);
-    this.common_routes.route(this.app);
+    this.userRoutes.route(this.app);
+    this.productRoutes.route(this.app);
+    this.commonRoutes.route(this.app);
   }
 
   private config(): void {
@@ -32,7 +32,10 @@ class App {
   }
 
   private mongoSetup(): void {
-    // mongoose.connect("mongodb://127.0.0.1:27017");
+    // mongoose
+    //   .connect("mongodb://127.0.0.1:27017/eCommerce")
+    //   .then(() => console.log("Mongo DB connected successfully."))
+    //   .catch((error) => console.log("Error Connecting!", error));
 
     mongoose
       .connect(`${process.env.DB_URL}`)

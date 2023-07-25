@@ -5,6 +5,6 @@ export interface IUser {
   name: String;
   email: String;
   password?: String;
-  is_deleted?: Boolean;
-  modification_notes: ModificationNote[];
+  isDeleted?: Boolean;
+  modificationNotes: ModificationNote[];
 }

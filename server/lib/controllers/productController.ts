@@ -3,46 +3,52 @@ import { Request, Response } from "express";
 
 import {
   failureResponse,
-  insufficientParameters,
+  insufficientFields,
   mongoError,
   successResponse,
 } from "@/modules/common/service";
 import { IProduct } from "@/modules/products/model";
-import Products from "@/modules/products/schema";
 import ProductService from "@/modules/products/service";
 import { DecodedUser } from "@/config/middleware";
-import { response_status_codes } from "@/modules/common/model";
+import { responseStatusCodes } from "@/modules/common/model";
+
+import Products from "@/modules/products/schema";
 
 export class ProductController {
-  private product_service: ProductService = new ProductService();
+  private productService: ProductService = new ProductService();
 
-  public async create_product(req: Request, res: Response) {
-    if (req.body.name && req.body.description && req.body.price) {
-      const product_params: IProduct = {
-        name: req.body.name,
-        description: req.body.description,
-        price: req.body.price,
-        category: [req.body.category ? req.body.category : "NOT_ASSIGNED"],
-        modification_notes: [
+  public async createProduct(req: Request, res: Response) {
+    const requiredFields = ["name", "description", "price"];
+    const missingFields = requiredFields.filter(
+      (field) => !(field in req.body)
+    );
+
+    if (missingFields.length === 0) {
+      const { name, description, price, categories } = req.body;
+
+      const productParams: IProduct = {
+        name,
+        description,
+        price,
+        categories: [categories ? categories.toLowerCase() : "all"],
+        modificationNotes: [
           {
-            modified_on: new Date(Date.now()),
-            modified_by: null,
-            modification_note: "New product created.",
+            modifiedOn: new Date(Date.now()),
+            modifiedBy: null,
+            modificationNote: "New product created.",
           },
         ],
       };
 
       try {
-        const product_data = await this.product_service.createProduct(
-          product_params
-        );
+        const product = await this.productService.createProduct(productParams);
 
         const responseData = {
-          _id: product_data.id,
-          name: product_data.name,
-          description: product_data.description,
-          price: product_data.price,
-          category: product_data.category,
+          _id: product.id,
+          name: product.name,
+          description: product.description,
+          price: product.price,
+          categories: product.categories,
         };
 
         successResponse("Product created successfully.", responseData, res);
@@ -50,100 +56,190 @@ export class ProductController {
         mongoError(error, res);
       }
     } else {
-      insufficientParameters(res);
+      insufficientFields(res, missingFields);
     }
   }
 
-  public async get_products(req: Request, res: Response) {
+  public async getProducts(req: Request, res: Response) {
     const token = req.headers.authorization?.split(" ")[1];
+    let products = [];
+    const { category, page } = req.query;
 
-    if (!token) {
-      try {
-        const products = await Products.find({}, { modification_notes: 0 });
+     products = await this.productService.getProducts(
+      parseInt(page as string) || 1,
+      10,
+      category
+        ? {
+            categories: { $in: [category] },
+          }
+        : {}
+    );
 
-        if (products.length >= 1) {
-          return successResponse("Get products successful.", products, res);
-        } else {
-          return failureResponse("NO products found.", null, res);
-        }
-      } catch (error) {
-        return mongoError(error, res);
-      }
-    }
+    console.log(products);
 
-    try {
-      let products: IProduct[] = [];
-      const user = jwt.verify(token, "SuperSecret") as DecodedUser;
-      const userRole = user.role;
+    return;
 
-      if (userRole === "ADMIN") products = await Products.find({});
-      else products = await Products.find({}, { modification_notes: 0 });
+    // if (!token) {
+    //   try {
+    //     products = await this.productService.getProducts(
+    //       category
+    //         ? {
+    //             categories: { $in: [category] },
+    //           }
+    //         : {},
+    //       { modificationNotes: 0 }
+    //     );
+    //   } catch (error) {
+    //     return mongoError(error, res);
+    //   }
+    // }
 
-      if (products.length >= 1) {
-        successResponse("Get products successful.", products, res);
-      } else {
-        failureResponse("NO products found.", null, res);
-      }
-    } catch (error) {
-      return res.status(response_status_codes.Unauthorized).json({
-        STATUS: "SUCCESS",
-        MESSAGE: "Unauthorized. Invalid token.",
-        DATA: null,
-      });
-    }
+    // if (token) {
+    //   try {
+    //     const user = jwt.verify(token, "SuperSecret") as DecodedUser;
+    //     const userRole = user.role;
+
+    //     if (userRole === "ADMIN")
+    //       products = await this.productService.getProducts(
+    //         req.query.category
+    //           ? {
+    //               categories: { $in: [req.query.category] },
+    //             }
+    //           : {}
+    //       );
+    //     else
+    //       products = await this.productService.getProducts(
+    //         req.query.category
+    //           ? {
+    //               categories: { $in: [req.query.category] },
+    //             }
+    //           : {},
+    //         { modificationNotes: 0 }
+    //       );
+    //   } catch (error) {
+    //     return res.status(responseStatusCodes.Unauthorized).json({
+    //       STATUS: "SUCCESS",
+    //       MESSAGE: "Unauthorized. Invalid token.",
+    //       DATA: null,
+    //     });
+    //   }
+    // }
+
+    if (products.length === 0)
+      return failureResponse("NO products found.", null, res);
+
+    return successResponse("Get products successful.", products, res);
   }
 
-  public async get_product(req: Request, res: Response) {
+  public async getProduct(req: Request, res: Response) {
     if (req.params.id) {
-      const product_filter = { _id: req.params.id };
+      const productFilter = { _id: req.params.id };
       const token = req.headers.authorization?.split(" ")[1];
+      let product: IProduct;
 
       if (!token) {
         try {
-          const product_data = await this.product_service.filterProduct(
-            product_filter,
-            { modification_notes: 0 }
-          );
+          product = await this.productService.filterProduct(productFilter, {
+            modificationNotes: 0,
+          });
 
-          if (product_data) {
-            return successResponse(
-              "Get product successful.",
-              product_data,
-              res
-            );
-          } else {
-            return failureResponse("Invalid product", null, res);
-          }
+          if (!product) return failureResponse("Invalid product", null, res);
+
+          return successResponse("Get product successful.", product, res);
         } catch (error) {
           mongoError(error, res);
         }
       }
 
+      if (token) {
+        try {
+          const user = jwt.verify(token, "SuperSecret") as DecodedUser;
+          const userRole = user.role;
+
+          if (userRole === "ADMIN")
+            product = await this.productService.filterProduct(productFilter);
+          else
+            product = await this.productService.filterProduct(productFilter, {
+              modificationNotes: 0,
+            });
+
+          if (!product) return failureResponse("Invalid product", null, res);
+
+          return successResponse("Get product successful.", product, res);
+        } catch (error) {
+          mongoError(error, res);
+        }
+      }
+    } else {
+      insufficientFields(res);
+    }
+  }
+
+  public async updateProduct(req: Request, res: Response) {
+    const { ...updatedFields } = req.body;
+
+    if (req.params.id && Object.keys(updatedFields).length >= 1) {
       try {
-        let product_data: IProduct;
-        const user = jwt.verify(token, "SuperSecret") as DecodedUser;
-        const userRole = user.role;
+        const productFilter = { _id: req.params.id };
+        const product = await this.productService.filterProduct(productFilter);
 
-        if (userRole === "ADMIN")
-          product_data = await this.product_service.filterProduct(
-            product_filter
-          );
-        else
-          product_data = await this.product_service.filterProduct(
-            product_filter,
-            { modification_notes: 0 }
+        if (!product) return failureResponse("Invalid product", null, res);
+
+        product.modificationNotes.unshift({
+          modifiedOn: new Date(Date.now()),
+          modifiedBy: null,
+          modificationNote: "Product data updated",
+        });
+
+        const isAlreadyInCategories = product.categories.some(
+          (el) => el.toLowerCase() === req.body.categories.toLowerCase()
+        );
+
+        if (!isAlreadyInCategories)
+          product.categories.push(req.body.categories.toLowerCase());
+
+        const productParams: IProduct = {
+          _id: product._id,
+          name: req.body?.name ?? product.name,
+          description: req.body?.description ?? product.description,
+          price: req.body?.price ?? product.price,
+          categories: product.categories,
+          modificationNotes: product.modificationNotes,
+        };
+
+        try {
+          const product = await this.productService.updateProduct(
+            productParams
           );
 
-        if (product_data) {
-          return successResponse("Get product successful.", product_data, res);
-        } else {
-          return failureResponse("Invalid product", null, res);
+          successResponse("update user successful", product, res);
+        } catch (err) {
+          mongoError(err, res);
         }
       } catch (error) {
         mongoError(error, res);
       }
     } else {
-      insufficientParameters(res);
+      insufficientFields(res);
+    }
+  }
+
+  public async deleteProduct(req: Request, res: Response) {
+    if (req.params.id) {
+      try {
+        const deleteDetails = await this.productService.deleteProduct(
+          req.params.id
+        );
+
+        if (deleteDetails.deletedCount === 0)
+          return failureResponse("Invalid product", null, res);
+
+        successResponse("delete product successful", null, res);
+      } catch (error) {
+        mongoError(error, res);
+      }
+    } else {
+      insufficientFields(res);
     }
   }
 }

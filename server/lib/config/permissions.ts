@@ -5,6 +5,8 @@ export const permissions = {
     canDeleteProfile: true,
     canViewUsers: false,
     canCreateProduct: false,
+    canEditProduct: false,
+    canDeleteProduct: false,
   },
   ADMIN: {
     canViewProfile: true,
@@ -12,5 +14,7 @@ export const permissions = {
     canDeleteProfile: true,
     canViewUsers: true,
     canCreateProduct: true,
+    canEditProduct: true,
+    canDeleteProduct: true,
   },
 };

@@ -5,7 +5,7 @@ export interface IProduct {
   name: String;
   description: String;
   price: Number;
-  category?: String[];
-  is_deleted?: Boolean;
-  modification_notes: ModificationNote[];
+  categories?: String[];
+  isDeleted?: Boolean;
+  modificationNotes: ModificationNote[];
 }
