@@ -12,7 +12,7 @@ export default class UserService {
     }
   }
 
-  public async getUsers(query?: any) {
+  public async fetchUsers(query?: any) {
     try {
       const users = await Users.find(query);
       return users;

@@ -1,7 +1,7 @@
 import * as jwt from "jsonwebtoken";
 import { Request, Response, NextFunction } from "express";
 
-import { permissions } from "./permissions";
+import { permissionsWihIndexSignature } from "./permissions";
 import { responseStatusCodes } from "@/modules/common/model";
 
 // Interface for user information in the decoded JWT token
@@ -28,7 +28,7 @@ export const hasPermission =
       const user = jwt.verify(token, "SuperSecret") as DecodedUser;
       const userRole = user.role;
 
-      if (!userRole || !permissions[userRole][action]) {
+      if (!userRole || !permissionsWihIndexSignature[userRole][action]) {
         return res.status(responseStatusCodes.Forbidden).json({
           STATUS: "SUCCESS",
           MESSAGE: "Access forbidden. Insufficient permissions.",
@@ -38,15 +38,15 @@ export const hasPermission =
 
       // If the action is "canEditProfile" or "canDeleteProfile", allow users to modify/delete their own profile
       if (
-        (action === "canEditProfile" ||
-          action === "canViewProfile" ||
-          action === "canDeleteProfile") &&
-        req.params.id !== user._id
+        action === "canEditProfile" ||
+        action === "canViewProfile" ||
+        action === "canDeleteProfile" ||
+        (action === "canViewWishlist" && req.params.id !== user._id)
       ) {
         return res.status(responseStatusCodes.Forbidden).json({
           STATUS: "SUCCESS",
           MESSAGE:
-            "Access forbidden. You can only view,modify or delete your own profile.",
+            "Access forbidden. You can only view,modify or delete your own data.",
           DATA: null,
         });
       }

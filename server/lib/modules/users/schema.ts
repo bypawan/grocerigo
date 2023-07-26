@@ -21,6 +21,7 @@ const userSchema = new Schema({
     enum: ["USER", "ADMIN"],
     default: "USER",
   },
+  wishlist: [String],
   isDeleted: {
     type: Boolean,
     default: false,
