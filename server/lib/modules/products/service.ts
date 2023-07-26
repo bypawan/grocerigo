@@ -13,29 +13,44 @@ export default class ProductService {
     }
   }
 
-  public async getProducts(
+  public async fetchProducts(
     page: number,
     limit: number,
     query?: any,
     projection?: any
   ) {
     try {
-      const totalCount = await Products.countDocuments(query);
+      const totalProducts = await Products.countDocuments(query);
       const products = await Products.find(query, projection)
         .skip((page - 1) * limit)
         .limit(limit);
 
-      return { ...products, page: page, totalCount: totalCount };
+      return {
+        totalProducts: totalProducts,
+        page: page,
+        totalPages: Math.ceil(totalProducts / limit),
+        products: products,
+      };
     } catch (error) {
       throw error;
     }
   }
 
-  public async filterProduct(query: any, exclude?: any) {
+  public async findProduct(query: any, exclude?: any) {
     try {
-      const product: IProduct = await Products.findOne(query, exclude);
+      const product: IProduct | null = await Products.findOne(query, exclude);
 
       return product;
+    } catch (error) {
+      throw error;
+    }
+  }
+
+  public async fetchDistinctFieldValues(field: string) {
+    try {
+      const values = await Products.distinct(field);
+
+      return values;
     } catch (error) {
       throw error;
     }

@@ -23,6 +23,14 @@ export class ProductRoutes {
       this.productController.getProduct(req, res);
     });
 
+    app.get("/api/products/search", (req: Request, res: Response) => {
+      this.productController.searchProduct(req, res);
+    });
+
+    app.get("/api/products/distinct", (req: Request, res: Response) => {
+      this.productController.getDistinctFieldValues(req, res);
+    });
+
     app.put(
       "/api/product/:id",
       hasPermission("canEditProduct"),

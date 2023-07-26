@@ -5,6 +5,7 @@ export interface IUser {
   name: String;
   email: String;
   password?: String;
+  wishlist?: String[];
   isDeleted?: Boolean;
   modificationNotes: ModificationNote[];
 }

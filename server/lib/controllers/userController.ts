@@ -11,10 +11,14 @@ import {
 } from "@/modules/common/service";
 import { IUser } from "@/modules/users/model";
 import UserService from "@/modules/users/service";
+import ProductService from "@/modules/products/service";
 import { validatePassword } from "@/utils/function";
+
+import Products from "@/modules/products/schema";
 
 export class UserController {
   private userService: UserService = new UserService();
+  private productService: ProductService = new ProductService();
 
   public async createUser(req: Request, res: Response) {
     const requiredFields = ["name", "email", "password"];
@@ -33,7 +37,7 @@ export class UserController {
           res
         );
 
-      const { name, email, password } = req.body;
+      const { name, email, password, wishlist } = req.body;
 
       if (!validatePassword(password))
         return failureResponse("Password is not valid.", null, res);
@@ -44,10 +48,11 @@ export class UserController {
         name,
         email,
         password: hashedPassword,
+        wishlist,
         modificationNotes: [
           {
             modifiedOn: new Date(Date.now()),
-            modifiedBy: null,
+            modifiedBy: "USER",
             modificationNote: "New user created",
           },
         ],
@@ -130,11 +135,23 @@ export class UserController {
 
   public async getUsers(req: Request, res: Response) {
     const token = req.headers.authorization?.split(" ")[1];
-    const user = jwt.verify(token, "SuperSecret") as { _id: string };
+    let user: { _id: string | undefined };
+
+    try {
+      const decodedToken = jwt.verify(
+        token as string,
+        "SuperSecret"
+      ) as unknown;
+
+      user = { _id: (decodedToken as { _id: string | undefined })._id };
+    } catch (error) {
+      user = { _id: undefined };
+      return failureResponse("JWT verification error", null, res);
+    }
 
     try {
       const query = { _id: { $ne: user._id } };
-      const users = await this.userService.getUsers(query);
+      const users = await this.userService.fetchUsers(query);
 
       if (users.length === 0)
         return failureResponse("No user found", null, res);
@@ -186,21 +203,25 @@ export class UserController {
 
         if (!user) return failureResponse("invalid user", null, res);
 
+        const { name, email } = req.body;
+
         user.modificationNotes.unshift({
           modifiedOn: new Date(Date.now()),
-          modifiedBy: null,
+          modifiedBy: "USER",
           modificationNote: "User data updated",
         });
 
         const userParams: IUser = {
           _id: req.params.id,
-          name: req.body.name.toLowerCase() ?? user.name,
-          email: req.body.email.toLowerCase() ?? user.email,
+          name: name.toLowerCase() ?? user.name,
+          email: email.toLowerCase() ?? user.email,
           modificationNotes: user.modificationNotes,
         };
 
         try {
           const user = await this.userService.updateUser(userParams);
+
+          if (!user) return failureResponse("invalid user", null, res);
 
           const responseData = {
             _id: user.id,
@@ -230,6 +251,49 @@ export class UserController {
 
         successResponse("delete user successful", null, res);
       } catch (error) {
+        mongoError(error, res);
+      }
+    } else {
+      insufficientFields(res);
+    }
+  }
+
+  public async getUserItems(req: Request, res: Response) {
+    if (req.params.id) {
+      const userFilter = { _id: req.params.id };
+
+      try {
+        const user = await this.userService.filterUser(userFilter);
+
+        if (!user) return failureResponse("invalid user", null, res);
+        const wishlistProductIds = user.wishlist;
+        const validIds = wishlistProductIds
+          .map((id) => {
+            try {
+              return new mongoose.Types.ObjectId(id);
+            } catch (error) {
+              return null;
+            }
+          })
+          .filter((id) => id !== null);
+        const query = { _id: { $in: validIds } };
+        const page = parseInt(req.query.page as string) || 1;
+
+        const products = await this.productService.fetchProducts(
+          page,
+          10,
+          query,
+          {
+            modificationNotes: 0,
+          }
+        );
+
+        if (products?.products.length === 0)
+          return failureResponse("NO products found.", null, res);
+
+        return successResponse("User wishlist is retrieved.", products, res);
+      } catch (error) {
+        console.log(error);
         mongoError(error, res);
       }
     } else {
