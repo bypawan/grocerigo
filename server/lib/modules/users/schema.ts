@@ -21,7 +21,7 @@ const userSchema = new Schema({
     enum: ["USER", "ADMIN"],
     default: "USER",
   },
-  wishlist: [String],
+  wishlist: [{ type: mongoose.Schema.Types.ObjectId, ref: "Wishlist" }],
   isDeleted: {
     type: Boolean,
     default: false,

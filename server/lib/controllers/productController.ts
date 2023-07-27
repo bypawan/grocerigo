@@ -80,7 +80,12 @@ export class ProductController {
 
   public async getProducts(req: Request, res: Response) {
     const token = req.headers.authorization?.split(" ")[1];
-    let products;
+    let products: {
+      totalProducts: number;
+      page: number;
+      totalPages: number;
+      products: IProduct[];
+    };
     const { category, page } = req.query;
     const categoryFilter = { categories: { $in: [category] } };
 

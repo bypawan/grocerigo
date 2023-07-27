@@ -38,10 +38,11 @@ export const hasPermission =
 
       // If the action is "canEditProfile" or "canDeleteProfile", allow users to modify/delete their own profile
       if (
-        action === "canEditProfile" ||
-        action === "canViewProfile" ||
-        action === "canDeleteProfile" ||
-        (action === "canViewWishlist" && req.params.id !== user._id)
+        (action === "canEditProfile" ||
+          action === "canViewProfile" ||
+          action === "canDeleteProfile" ||
+          action === "canViewWishlist") &&
+        req.params.id !== user._id
       ) {
         return res.status(responseStatusCodes.Forbidden).json({
           STATUS: "SUCCESS",

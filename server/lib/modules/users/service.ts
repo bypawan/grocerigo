@@ -21,7 +21,7 @@ export default class UserService {
     }
   }
 
-  public async filterUser(query: any) {
+  public async findUser(query: any) {
     try {
       const user = await Users.findOne(query);
       return user;
@@ -37,6 +37,7 @@ export default class UserService {
       const user = await Users.findOneAndUpdate(query, userParams, {
         new: true,
       });
+
       return user;
     } catch (error) {
       throw error;
