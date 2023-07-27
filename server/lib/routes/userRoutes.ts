@@ -45,13 +45,5 @@ export class UserRoutes {
         this.userController.deleteUser(req, res);
       }
     );
-
-    app.get(
-      "/api/user/:id/wishlist",
-      hasPermission("canViewWishlist"),
-      (req: Request, res: Response) => {
-        this.userController.getUserItems(req, res);
-      }
-    );
   }
 }

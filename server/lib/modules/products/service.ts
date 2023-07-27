@@ -18,7 +18,12 @@ export default class ProductService {
     limit: number,
     query?: any,
     projection?: any
-  ) {
+  ): Promise<{
+    totalProducts: number;
+    page: number;
+    totalPages: number;
+    products: IProduct[];
+  }> {
     try {
       const totalProducts = await Products.countDocuments(query);
       const products = await Products.find(query, projection)

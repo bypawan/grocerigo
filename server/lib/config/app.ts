@@ -6,6 +6,7 @@ dotenv.config();
 
 import { UserRoutes } from "@/routes/userRoutes";
 import { ProductRoutes } from "@/routes/productRoutes";
+import { WishlistRoutes } from "@/routes/wishlistRoutes";
 import { CommonRoutes } from "@/routes/commonRoutes";
 
 class App {
@@ -13,6 +14,7 @@ class App {
 
   private userRoutes: UserRoutes = new UserRoutes();
   private productRoutes: ProductRoutes = new ProductRoutes();
+  private wishlistRoutes: WishlistRoutes = new WishlistRoutes();
   private commonRoutes: CommonRoutes = new CommonRoutes();
 
   constructor() {
@@ -21,6 +23,7 @@ class App {
     this.mongoSetup();
     this.userRoutes.route(this.app);
     this.productRoutes.route(this.app);
+    this.wishlistRoutes.route(this.app);
     this.commonRoutes.route(this.app);
   }
 

@@ -8,6 +8,8 @@ const permissions = {
     canEditProduct: false,
     canDeleteProduct: false,
     canViewWishlist: true,
+    canEditWishlist: true,
+    canDeleteWishlist: true,
   },
   ADMIN: {
     canViewProfile: true,
@@ -18,6 +20,8 @@ const permissions = {
     canEditProduct: true,
     canDeleteProduct: true,
     canViewWishlist: false,
+    canEditWishlist: false,
+    canDeleteWishlist: false,
   },
 } as const;
 
