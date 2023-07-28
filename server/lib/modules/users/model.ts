@@ -6,7 +6,7 @@ export interface IUser {
   name: String;
   email: String;
   password?: String;
-  wishlist?: String[];
+  wishlist?: mongoose.Types.ObjectId;
   isDeleted?: Boolean;
   modificationNotes: ModificationNote[];
 }

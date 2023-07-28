@@ -26,7 +26,7 @@ export class WishlistRoutes {
       "/api/user/:id/wishlist/:productId",
       hasPermission("canDeleteWishlist"),
       (req: Request, res: Response) => {
-        this.wishlistController.removeProductToUserWishlist(req, res);
+        this.wishlistController.removeProductFromUserWishlist(req, res);
       }
     );
   }

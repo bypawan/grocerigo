@@ -1,4 +1,5 @@
 import * as jwt from "jsonwebtoken";
+import * as mongoose from "mongoose";
 import { Request, Response, NextFunction } from "express";
 
 import { permissionsWihIndexSignature } from "./permissions";
@@ -36,13 +37,17 @@ export const hasPermission =
         });
       }
 
-      // If the action is "canEditProfile" or "canDeleteProfile", allow users to modify/delete their own profile
+      const userId = new mongoose.Types.ObjectId(user._id);
+      const reqParamsId = new mongoose.Types.ObjectId(req.params.id);
+
       if (
         (action === "canEditProfile" ||
           action === "canViewProfile" ||
           action === "canDeleteProfile" ||
-          action === "canViewWishlist") &&
-        req.params.id !== user._id
+          action === "canViewWishlist" ||
+          action === "canEditWishlist" ||
+          action === "canDeleteWishlist") &&
+        !userId.equals(reqParamsId)
       ) {
         return res.status(responseStatusCodes.Forbidden).json({
           STATUS: "SUCCESS",

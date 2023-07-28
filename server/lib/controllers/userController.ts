@@ -12,9 +12,13 @@ import {
 import { IUser } from "@/modules/users/model";
 import UserService from "@/modules/users/service";
 import { validatePassword } from "@/utils/function";
+import ProductService from "@/modules/products/service";
+import WishlistService from "@/modules/wishlist/service";
 
 export class UserController {
   private userService: UserService = new UserService();
+  private productService: ProductService = new ProductService();
+  private wishlistService: WishlistService = new WishlistService();
 
   public async createUser(req: Request, res: Response) {
     const requiredFields = ["name", "email", "password"];
@@ -40,10 +44,6 @@ export class UserController {
 
       const hashedPassword = await hash(password, 10);
 
-      console.log(wishlist);
-
-      return;
-
       const userParams: IUser = {
         name,
         email,
@@ -67,6 +67,26 @@ export class UserController {
           // Add env file here
           "SuperSecret"
         );
+
+        if (Array.isArray(wishlist) && wishlist.length >= 1) {
+          const validIds = wishlist.filter((id: mongoose.Types.ObjectId) =>
+            mongoose.Types.ObjectId.isValid(id)
+          );
+          const products = await this.productService.fetchProducts(1, 1000, {
+            _id: { $in: validIds },
+          });
+          const wishlistProductIds = products.products.map(
+            (product) => product._id
+          );
+
+          const userWishlist = await this.wishlistService.createWishlist({
+            userId: user._id,
+            products: wishlistProductIds,
+          });
+
+          user.wishlist = userWishlist._id;
+          user.save();
+        }
 
         const responseData = {
           _id: user.id,
