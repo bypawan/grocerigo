@@ -1,6 +1,4 @@
-import * as jwt from "jsonwebtoken";
 import * as mongoose from "mongoose";
-import { hash, compare } from "bcrypt";
 import { Request, Response } from "express";
 
 import {
@@ -9,12 +7,9 @@ import {
   successResponse,
   failureResponse,
 } from "@/modules/common/service";
-import { IUser } from "@/modules/users/model";
 import UserService from "@/modules/users/service";
 import ProductService from "@/modules/products/service";
 import WishlistService from "@/modules/wishlist/service";
-
-import Products from "@/modules/products/schema";
 
 export class WishlistController {
   private userService: UserService = new UserService();
@@ -30,31 +25,32 @@ export class WishlistController {
 
         if (!user) return failureResponse("invalid user", null, res);
 
-        const wishlistProductIds = user.wishlist;
+        const wishlistId = user.wishlist;
 
-        if (wishlistProductIds.length === 0)
+        if (!wishlistId)
           return failureResponse("Wishlist is empty.", null, res);
 
-        const validIds = wishlistProductIds
-          .map((id) => {
-            try {
-              return new mongoose.Types.ObjectId(id);
-            } catch (error) {
-              return null;
-            }
-          })
-          .filter((id) => id !== null);
-        const query = { _id: { $in: validIds } };
-        const page = parseInt(req.query.page as string) || 1;
+        const wishlist = await this.wishlistService.findWishlist({
+          _id: wishlistId,
+        });
 
-        const products = await this.productService.fetchProducts(
-          page,
-          10,
-          query,
-          {
-            modificationNotes: 0,
-          }
+        if (!wishlist.userId.equals(user._id))
+          return failureResponse("Wishlist is empty.", null, res);
+
+        const validIds = wishlist.products.filter(
+          (id: mongoose.Types.ObjectId) => mongoose.Types.ObjectId.isValid(id)
         );
+        const products = await this.productService.fetchProducts(
+          parseInt(req.query.page as string) || 1,
+          10,
+          {
+            _id: { $in: validIds },
+          },
+          { modificationNotes: 0 }
+        );
+
+        if (products?.products.length === 0)
+          return failureResponse("Wishlist is empty.", null, res);
 
         return successResponse("User wishlist is retrieved.", products, res);
       } catch (error) {
@@ -69,31 +65,33 @@ export class WishlistController {
   public async addProductToUserWishlist(req: Request, res: Response) {
     if (req.params.id && req.body.productId) {
       const userFilter = { _id: req.params.id };
+      const { productId } = req.body;
 
       try {
         const user = await this.userService.findUser(userFilter);
-        const product = await this.productService.findProduct({
-          _id: req.body.productId,
-        });
-
         if (!user) return failureResponse("invalid user", null, res);
-        if (!product) return failureResponse("invalid product", null, res);
-
-        const wishlistProductId = req.body.productId;
 
         try {
-          new mongoose.Types.ObjectId(wishlistProductId);
+          new mongoose.Types.ObjectId(productId);
         } catch (error) {
-          failureResponse("Not a valid product id.", null, res);
-          return null;
+          return failureResponse("Not a valid product id.", null, res);
         }
 
-        if (user.wishlist?.includes(wishlistProductId))
+        const product = await this.productService.findProduct({
+          _id: productId,
+        });
+
+        if (!product) return failureResponse("invalid product", null, res);
+
+        const wishlist = await this.wishlistService.findWishlist({
+          _id: user.wishlist,
+        });
+
+        if (wishlist.products.includes(product._id))
           return failureResponse("Product is already in wishlist", null, res);
 
-        user.wishlist.unshift(wishlistProductId);
-        await user.save();
-
+        wishlist.products.unshift(product._id);
+        await wishlist.save();
         successResponse("Product added to wishlist", null, res);
       } catch (error) {
         console.log(error);
@@ -105,33 +103,38 @@ export class WishlistController {
     }
   }
 
-  public async removeProductToUserWishlist(req: Request, res: Response) {
+  public async removeProductFromUserWishlist(req: Request, res: Response) {
     if (req.params.id && req.params.productId) {
       const userFilter = { _id: req.params.id };
+      const { productId } = req.params;
 
       try {
         const user = await this.userService.findUser(userFilter);
-
         if (!user) return failureResponse("invalid user", null, res);
 
-        const wishlistProductId = req.params.productId;
-        let validId: mongoose.Types.ObjectId;
-
         try {
-          validId = new mongoose.Types.ObjectId(wishlistProductId);
+          new mongoose.Types.ObjectId(productId);
         } catch (error) {
-          failureResponse("Not a valid product id.", null, res);
-          return null;
+          return failureResponse("Not a valid product id.", null, res);
         }
 
-        const index = user.wishlist.indexOf(validId);
+        const product = await this.productService.findProduct({
+          _id: productId,
+        });
+
+        if (!product) return failureResponse("invalid product", null, res);
+
+        const wishlist = await this.wishlistService.findWishlist({
+          _id: user.wishlist,
+        });
+
+        const index = wishlist.products.indexOf(product._id);
 
         if (index === -1)
           return failureResponse("Product not found in wishlist", null, res);
 
-        user.wishlist.splice(index, 1);
-        await user.save();
-
+        wishlist.products.splice(index, 1);
+        await wishlist.save();
         successResponse("Product removed from wishlist", null, res);
       } catch (error) {
         console.log(error);
