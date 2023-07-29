@@ -8,6 +8,7 @@ import { UserRoutes } from "@/routes/userRoutes";
 import { ProductRoutes } from "@/routes/productRoutes";
 import { WishlistRoutes } from "@/routes/wishlistRoutes";
 import { CommonRoutes } from "@/routes/commonRoutes";
+import { CartRoutes } from "@/routes/cartRoutes";
 
 class App {
   public app: express.Application;
@@ -15,6 +16,7 @@ class App {
   private userRoutes: UserRoutes = new UserRoutes();
   private productRoutes: ProductRoutes = new ProductRoutes();
   private wishlistRoutes: WishlistRoutes = new WishlistRoutes();
+  private cartRoutes: CartRoutes = new CartRoutes();
   private commonRoutes: CommonRoutes = new CommonRoutes();
 
   constructor() {
@@ -24,6 +26,7 @@ class App {
     this.userRoutes.route(this.app);
     this.productRoutes.route(this.app);
     this.wishlistRoutes.route(this.app);
+    this.cartRoutes.route(this.app);
     this.commonRoutes.route(this.app);
   }
 

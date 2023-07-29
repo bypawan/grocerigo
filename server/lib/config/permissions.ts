@@ -10,6 +10,9 @@ const permissions = {
     canViewWishlist: true,
     canEditWishlist: true,
     canDeleteWishlist: true,
+    canViewCart: true,
+    canEditCart: true,
+    canDeleteCart: true,
   },
   ADMIN: {
     canViewProfile: true,
@@ -22,6 +25,9 @@ const permissions = {
     canViewWishlist: false,
     canEditWishlist: false,
     canDeleteWishlist: false,
+    canViewCart: false,
+    canEditCart: false,
+    canDeleteCart: false,
   },
 } as const;
 

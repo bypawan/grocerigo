@@ -22,6 +22,7 @@ const userSchema = new Schema({
     default: "USER",
   },
   wishlist: { type: mongoose.Schema.Types.ObjectId, ref: "Wishlist" },
+  cart: { type: mongoose.Schema.Types.ObjectId, ref: "Cart" },
   isDeleted: {
     type: Boolean,
     default: false,

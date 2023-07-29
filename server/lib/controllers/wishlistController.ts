@@ -83,18 +83,37 @@ export class WishlistController {
 
         if (!product) return failureResponse("invalid product", null, res);
 
-        const wishlist = await this.wishlistService.findWishlist({
-          _id: user.wishlist,
-        });
+        try {
+          if (!user.wishlist) {
+            let wishlist = await this.wishlistService.createWishlist({
+              userId: user._id,
+              products: [product._id],
+            });
+            wishlist = await wishlist.save();
 
-        if (wishlist.products.includes(product._id))
-          return failureResponse("Product is already in wishlist", null, res);
+            user.wishlist = wishlist._id;
+            await user.save();
+          } else {
+            const wishlist = await this.wishlistService.findWishlist({
+              _id: user.wishlist,
+            });
 
-        wishlist.products.unshift(product._id);
-        await wishlist.save();
+            if (wishlist.products.includes(product._id))
+              return failureResponse(
+                "Product is already in wishlist",
+                null,
+                res
+              );
+
+            wishlist.products.unshift(product._id);
+            await wishlist.save();
+          }
+        } catch (error) {
+          return mongoError(error, res);
+        }
+
         successResponse("Product added to wishlist", null, res);
       } catch (error) {
-        console.log(error);
         mongoError(error, res);
       }
     } else {
@@ -109,7 +128,7 @@ export class WishlistController {
       const { productId } = req.params;
 
       try {
-        const user = await this.userService.findUser(userFilter);
+        let user = await this.userService.findUser(userFilter);
         if (!user) return failureResponse("invalid user", null, res);
 
         try {
@@ -124,9 +143,12 @@ export class WishlistController {
 
         if (!product) return failureResponse("invalid product", null, res);
 
-        const wishlist = await this.wishlistService.findWishlist({
+        let wishlist = await this.wishlistService.findWishlist({
           _id: user.wishlist,
         });
+
+        if (!wishlist)
+          return failureResponse("User have no wishlist", null, res);
 
         const index = wishlist.products.indexOf(product._id);
 
@@ -134,7 +156,14 @@ export class WishlistController {
           return failureResponse("Product not found in wishlist", null, res);
 
         wishlist.products.splice(index, 1);
-        await wishlist.save();
+        wishlist = await wishlist.save();
+
+        if (wishlist.products.length === 0) {
+          this.wishlistService.deleteWishlist(wishlist._id);
+          user.wishlist = null;
+          await user.save();
+        }
+
         successResponse("Product removed from wishlist", null, res);
       } catch (error) {
         console.log(error);

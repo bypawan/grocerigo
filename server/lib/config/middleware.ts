@@ -46,7 +46,10 @@ export const hasPermission =
           action === "canDeleteProfile" ||
           action === "canViewWishlist" ||
           action === "canEditWishlist" ||
-          action === "canDeleteWishlist") &&
+          action === "canDeleteWishlist" ||
+          action === "canViewCart" ||
+          action === "canEditCart" ||
+          action === "canDeleteCart") &&
         !userId.equals(reqParamsId)
       ) {
         return res.status(responseStatusCodes.Forbidden).json({
