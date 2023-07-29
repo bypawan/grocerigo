@@ -14,11 +14,13 @@ import UserService from "@/modules/users/service";
 import { validatePassword } from "@/utils/function";
 import ProductService from "@/modules/products/service";
 import WishlistService from "@/modules/wishlist/service";
+import CartService from "@/modules/cart/service";
 
 export class UserController {
   private userService: UserService = new UserService();
   private productService: ProductService = new ProductService();
   private wishlistService: WishlistService = new WishlistService();
+  private cartService: CartService = new CartService();
 
   public async createUser(req: Request, res: Response) {
     const requiredFields = ["name", "email", "password"];
@@ -37,7 +39,7 @@ export class UserController {
           res
         );
 
-      const { name, email, password, wishlist } = req.body;
+      const { name, email, password, wishlist, cart } = req.body;
 
       if (!validatePassword(password))
         return failureResponse("Password is not valid.", null, res);
@@ -85,7 +87,46 @@ export class UserController {
           });
 
           user.wishlist = userWishlist._id;
-          user.save();
+          await user.save();
+        }
+
+        if (Array.isArray(cart) && cart.length >= 1) {
+          const validIds = cart
+            .filter(
+              (product: {
+                productId: mongoose.Types.ObjectId;
+                quantity: number;
+              }) => mongoose.Types.ObjectId.isValid(product.productId)
+            )
+            .map(
+              (product: {
+                productId: mongoose.Types.ObjectId;
+                quantity: number;
+              }) => product.productId
+            );
+          const products = await this.productService.fetchProducts(1, 1000, {
+            _id: { $in: validIds },
+          });
+
+          const validCart = products.products.map((product) => {
+            const item = cart.find(
+              (item: {
+                productId: mongoose.Types.ObjectId;
+                quantity: number;
+              }) => product._id.equals(item.productId)
+            );
+
+            if (item)
+              return { productId: item.productId, quantity: item.quantity };
+          });
+
+          const userCart = await this.cartService.createCart({
+            userId: user._id,
+            products: validCart,
+          });
+
+          user.cart = userCart._id;
+          await user.save();
         }
 
         const responseData = {
