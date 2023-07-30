@@ -12,8 +12,6 @@ import ProductService from "@/modules/products/service";
 import { DecodedUser } from "@/config/middleware";
 import { responseStatusCodes } from "@/modules/common/model";
 
-import Products from "@/modules/products/schema";
-
 export class ProductController {
   private productService: ProductService = new ProductService();
 

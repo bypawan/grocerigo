@@ -9,7 +9,7 @@ import {
 } from "@/modules/common/service";
 import UserService from "@/modules/users/service";
 import ProductService from "@/modules/products/service";
-import WishlistService from "@/modules/wishlist/service";
+import WishlistService from "@/modules/wishlists/service";
 
 export class WishlistController {
   private userService: UserService = new UserService();

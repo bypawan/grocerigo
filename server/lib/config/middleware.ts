@@ -39,17 +39,21 @@ export const hasPermission =
 
       const userId = new mongoose.Types.ObjectId(user._id);
       const reqParamsId = new mongoose.Types.ObjectId(req.params.id);
+      const actionRequiringPermissions = new Set([
+        "canEditProfile",
+        "canViewProfile",
+        "canDeleteProfile",
+        "canViewWishlist",
+        "canEditWishlist",
+        "canDeleteWishlist",
+        "canViewCart",
+        "canEditCart",
+        "canDeleteCart",
+        "canCreateAddress",
+      ]);
 
       if (
-        (action === "canEditProfile" ||
-          action === "canViewProfile" ||
-          action === "canDeleteProfile" ||
-          action === "canViewWishlist" ||
-          action === "canEditWishlist" ||
-          action === "canDeleteWishlist" ||
-          action === "canViewCart" ||
-          action === "canEditCart" ||
-          action === "canDeleteCart") &&
+        actionRequiringPermissions.has(action) &&
         !userId.equals(reqParamsId)
       ) {
         return res.status(responseStatusCodes.Forbidden).json({

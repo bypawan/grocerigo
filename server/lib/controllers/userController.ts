@@ -13,8 +13,8 @@ import { IUser } from "@/modules/users/model";
 import UserService from "@/modules/users/service";
 import { validatePassword } from "@/utils/function";
 import ProductService from "@/modules/products/service";
-import WishlistService from "@/modules/wishlist/service";
-import CartService from "@/modules/cart/service";
+import WishlistService from "@/modules/wishlists/service";
+import CartService from "@/modules/carts/service";
 
 export class UserController {
   private userService: UserService = new UserService();
