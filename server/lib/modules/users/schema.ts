@@ -21,8 +21,9 @@ const userSchema = new Schema({
     enum: ["USER", "ADMIN"],
     default: "USER",
   },
-  wishlist: { type: mongoose.Schema.Types.ObjectId, ref: "Wishlist" },
-  cart: { type: mongoose.Schema.Types.ObjectId, ref: "Cart" },
+  wishlist: { type: mongoose.Schema.Types.ObjectId, ref: "Wishlists" },
+  cart: { type: mongoose.Schema.Types.ObjectId, ref: "Carts" },
+  address: { type: mongoose.Schema.Types.ObjectId, ref: "Addresses" },
   isDeleted: {
     type: Boolean,
     default: false,
@@ -45,5 +46,4 @@ userSchema.methods.toJSON = function () {
 };
 
 const Users = mongoose.model("Users", userSchema);
-
 export default Users;

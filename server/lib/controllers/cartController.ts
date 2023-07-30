@@ -9,8 +9,7 @@ import {
 } from "@/modules/common/service";
 import UserService from "@/modules/users/service";
 import ProductService from "@/modules/products/service";
-import WishlistService from "@/modules/wishlist/service";
-import CartService from "@/modules/cart/service";
+import CartService from "@/modules/carts/service";
 
 export class CartController {
   private userService: UserService = new UserService();

@@ -13,6 +13,8 @@ const permissions = {
     canViewCart: true,
     canEditCart: true,
     canDeleteCart: true,
+    canCreateAddress: true,
+    canViewAddress: true,
   },
   ADMIN: {
     canViewProfile: true,
@@ -28,6 +30,8 @@ const permissions = {
     canViewCart: false,
     canEditCart: false,
     canDeleteCart: false,
+    canCreateAddress: false,
+    canViewAddress: false,
   },
 } as const;
 
