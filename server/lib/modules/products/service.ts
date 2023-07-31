@@ -67,6 +67,7 @@ export default class ProductService {
     try {
       const product = await Products.findOneAndUpdate(query, productParams, {
         new: true,
+        runValidators: true,
       });
       return product;
     } catch (error) {

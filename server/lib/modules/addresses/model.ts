@@ -1,9 +1,10 @@
 import * as mongoose from "mongoose";
 
 export interface IAddress {
-  id?: mongoose.Types.ObjectId;
+  _id?: mongoose.Types.ObjectId;
   userId: mongoose.Types.ObjectId;
   addresses: {
+    _id?: mongoose.Types.ObjectId;
     name: String;
     email: String;
     addressLine: String;

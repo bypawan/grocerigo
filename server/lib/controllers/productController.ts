@@ -268,21 +268,21 @@ export class ProductController {
 
         const isAlreadyInCategories =
           product.categories &&
-          req.body.categories &&
+          updatedFields.categories &&
           product.categories.length >= 1 &&
           product.categories.some(
-            (el) => el.toLowerCase() === req.body.categories.toLowerCase()
+            (el) => el.toLowerCase() === updatedFields.categories.toLowerCase()
           );
 
         if (!isAlreadyInCategories && isAlreadyInCategories !== undefined)
           product.categories &&
-            product.categories.push(req.body.categories.toLowerCase());
+            product.categories.push(updatedFields.categories.toLowerCase());
 
         const productParams: IProduct = {
           _id: product._id,
-          name: req.body?.name ?? product.name,
-          description: req.body?.description ?? product.description,
-          price: req.body?.price ?? product.price,
+          name: updatedFields.name ?? product.name,
+          description: updatedFields.description ?? product.description,
+          price: updatedFields.price ?? product.price,
           categories: product.categories,
           modificationNotes: product.modificationNotes,
         };
@@ -292,7 +292,7 @@ export class ProductController {
             productParams
           );
 
-          successResponse("update user successful", product, res);
+          successResponse("update product successful", product, res);
         } catch (err) {
           mongoError(err, res);
         }

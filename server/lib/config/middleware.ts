@@ -50,6 +50,9 @@ export const hasPermission =
         "canEditCart",
         "canDeleteCart",
         "canCreateAddress",
+        "canViewAddress",
+        "canEditAddress",
+        "canDeleteAddress",
       ]);
 
       if (

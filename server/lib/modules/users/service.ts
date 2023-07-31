@@ -36,6 +36,7 @@ export default class UserService {
     try {
       const user = await Users.findOneAndUpdate(query, userParams, {
         new: true,
+        runValidators: true,
       });
 
       return user;

@@ -15,6 +15,8 @@ const permissions = {
     canDeleteCart: true,
     canCreateAddress: true,
     canViewAddress: true,
+    canEditAddress: true,
+    canDeleteAddress: true,
   },
   ADMIN: {
     canViewProfile: true,
@@ -32,6 +34,8 @@ const permissions = {
     canDeleteCart: false,
     canCreateAddress: false,
     canViewAddress: false,
+    canEditAddress: false,
+    canDeleteAddress: false,
   },
 } as const;
 

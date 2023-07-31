@@ -213,7 +213,6 @@ export class CartController {
 
         successResponse("Product removed from cart", null, res);
       } catch (error) {
-        console.log(error);
         mongoError(error, res);
       }
     } else {
