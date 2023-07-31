@@ -1,3 +1,5 @@
+import * as mongoose from "mongoose";
+
 import { IAddress } from "./model";
 import Addresses from "./schema";
 
@@ -13,23 +15,35 @@ export default class AddressService {
     }
   }
 
-  public async fetchAddress(query: any) {
+  public async findAddress(query: any, projection?: any) {
     try {
-      const address = await Addresses.findOne(query);
+      const address = await Addresses.findOne(query, projection);
       return address;
     } catch (error) {
       throw error;
     }
   }
 
-  // public async deleteCart(_id: mongoose.Types.ObjectId) {
-  //   const query = { _id: _id };
+  public async updateAddress(query: any, addressParams: any) {
+    try {
+      const address = await Addresses.findOneAndUpdate(query, addressParams, {
+        new: true,
+        runValidators: true,
+      });
+      return address;
+    } catch (error) {
+      throw error;
+    }
+  }
 
-  //   try {
-  //     const cart = await Carts.deleteOne(query);
-  //     return cart;
-  //   } catch (error) {
-  //     throw error;
-  //   }
-  // }
+  public async deleteAddress(_id: mongoose.Types.ObjectId) {
+    const query = { _id: _id };
+
+    try {
+      const address = await Addresses.deleteOne(query);
+      return address;
+    } catch (error) {
+      throw error;
+    }
+  }
 }
