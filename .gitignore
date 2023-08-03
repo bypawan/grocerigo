@@ -2,37 +2,54 @@
 
 # dependencies
 /client/node_modules
+/dashboard/node_modules
 /server/node_modules
 /server/.env
 /server/dist
 /client/.pnp
+/dashboard/.pnp
 /client/.pnp.js
+/dashboard/.pnp.js
 
 # testing
 /client/coverage
+/dashboard/coverage
 
 # next.js
 /client/.next/
 /client/out/
+/dashboard/.next/
+/dashboard/out/
 
 # production
 /client/build
+/dashboard/build
 
 # misc
 /client/.DS_Store
 /client/*.pem
+/dashboard/.DS_Store
+/dashboard/*.pem
 
 # debug
 /client/npm-debug.log*
 /client/yarn-debug.log*
 /client/yarn-error.log*
+/dashboard/npm-debug.log*
+/dashboard/yarn-debug.log*
+/dashboard/yarn-error.log*
+
 
 # local env files
 /client/.env*.local
+/dashboard/.env*.local
 
 # vercel
 /client/.vercel
+/dashboard/.vercel
 
 # typescript
 /client/*.tsbuildinfo
 /client/next-env.d.ts
+/dashboard/*.tsbuildinfo
+/dashboard/next-env.d.ts
