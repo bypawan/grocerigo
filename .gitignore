@@ -3,6 +3,7 @@
 # dependencies
 /client/node_modules
 /dashboard/node_modules
+/dashboard/.env
 /server/node_modules
 /server/.env
 /server/dist
