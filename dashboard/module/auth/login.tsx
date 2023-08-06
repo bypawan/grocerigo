@@ -1,54 +1,113 @@
 "use client";
-import { Input, Image, Button } from "@nextui-org/react";
+import { z } from "zod";
+import { useEffect } from "react";
+import { useForm } from "react-hook-form";
+import { useRouter } from "next/navigation";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { signIn, getSession, useSession } from "next-auth/react";
 
-import loginBg from "@/assets/images/login/login-bg.jpg";
+import { loginSchema } from "./schema";
+import { Input } from "@/components/ui/input";
+import { useToast } from "@/components/ui/use-toast";
+import {
+  Form,
+  FormControl,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
+} from "@/components/ui/form";
+import { Button } from "@/components/ui/button";
+import { Loader } from "@/components/ui/loader";
 
 export const Login = () => {
+  const router = useRouter();
+  const { toast } = useToast();
+  const { data: session } = useSession();
+
+  useEffect(() => {
+    if (session?.user?.STATUS === "SUCCESS") router.push("/");
+  }, [session, router]);
+
+  const form = useForm<z.infer<typeof loginSchema>>({
+    resolver: zodResolver(loginSchema),
+    defaultValues: { email: "", password: "" },
+  });
+
+  const onSubmit = async (values: z.infer<typeof loginSchema>) => {
+    await signIn("credentials", {
+      email: values.email,
+      password: values.password,
+      redirect: false,
+    });
+
+    const session = await getSession();
+
+    if (session?.user?.STATUS === "FAILURE")
+      return toast({
+        variant: "destructive",
+        description: session.user.MESSAGE,
+      });
+
+    if (session?.user?.STATUS === "SUCCESS")
+      return toast({
+        description: session.user.MESSAGE,
+      });
+  };
+
+  if (session === undefined || session?.user?.STATUS === "SUCCESS")
+    return (
+      <div className="mt-8">
+        <Loader />
+      </div>
+    );
+
   return (
-    <section className="min-h-screen grid lg:grid-cols-2">
-      <div className="flex justify-center items-center px-5">
-        <div className="max-w-lg w-full">
-          <h1 className="text-3xl font-semibold">Welcome back admin</h1>
-          <form className="mt-10">
-            <div className="">
-              <Input
-                type="email"
-                label="Email"
-                labelPlacement="outside"
-                description="e.g admin@admin.com"
-              />
-            </div>
-            <div className="mt-8">
-              <Input
-                type="password"
-                label="Password"
-                labelPlacement="outside"
-                description="Your secret password"
-              />
-            </div>
-            <div className="mt-10">
-              <Button color="primary">Go to Dashboard</Button>
-            </div>
-          </form>
+    <Form {...form}>
+      <form className="mt-10" onSubmit={form.handleSubmit(onSubmit)}>
+        <div className="">
+          <FormField
+            control={form.control}
+            name="email"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Email</FormLabel>
+                <FormControl>
+                  <Input {...field} />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
         </div>
-      </div>
-      <div className="hidden lg:block">
-        <Image
-          removeWrapper={true}
-          className="h-[90vh] object-cover"
-          alt="NextUI hero Image with delay"
-          src={loginBg.src}
-        />
-        <p className="text-center mt-2 italic">
-          Image by{" "}
-          <a
-            href="https://www.freepik.com/free-vector/hand-drawn-one-line-art-illustration_22587404.htm#query=illustartion%20minimal&position=2&from_view=search&track=ais"
-            target="_blank"
-          >
-            Freepik
-          </a>
-        </p>
-      </div>
-    </section>
+        <div className="mt-5">
+          <FormField
+            control={form.control}
+            name="password"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Password</FormLabel>
+                <FormControl>
+                  <Input type="password" {...field} />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+          <div className="mt-8">
+            {form.formState.isSubmitting ? (
+              <Loader />
+            ) : (
+              <Button
+                className="bg-[#fec887] text-[#2d2417] hover:bg-[#fceae5] hover:text-[#2d2417]"
+                type="submit"
+              >
+                Go to Dashboard
+              </Button>
+            )}
+          </div>
+        </div>
+      </form>
+    </Form>
   );
 };
