@@ -1,7 +1,8 @@
 "use client";
 import { z } from "zod";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
+import { Eye, EyeOff } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { signIn, getSession, useSession } from "next-auth/react";
@@ -17,13 +18,14 @@ import {
   FormLabel,
   FormMessage,
 } from "@/components/ui/form";
-import { Button } from "@/components/ui/button";
 import { Loader } from "@/components/ui/loader";
+import { Button } from "@/components/ui/button";
 
 export const Login = () => {
   const router = useRouter();
   const { toast } = useToast();
   const { data: session } = useSession();
+  const [isVisible, setIsVisible] = useState(false);
 
   useEffect(() => {
     if (session?.user?.STATUS === "SUCCESS") router.push("/");
@@ -49,10 +51,10 @@ export const Login = () => {
         description: session.user.MESSAGE,
       });
 
-    if (session?.user?.STATUS === "SUCCESS")
-      return toast({
-        description: session.user.MESSAGE,
-      });
+    if (session?.user?.STATUS === "SUCCESS") {
+      router.push("/");
+      toast({ description: session.user.MESSAGE });
+    }
   };
 
   if (session === undefined || session?.user?.STATUS === "SUCCESS")
@@ -64,7 +66,7 @@ export const Login = () => {
 
   return (
     <Form {...form}>
-      <form className="mt-10" onSubmit={form.handleSubmit(onSubmit)}>
+      <form className="mt-5 max-w-sm" onSubmit={form.handleSubmit(onSubmit)}>
         <div className="">
           <FormField
             control={form.control}
@@ -80,7 +82,7 @@ export const Login = () => {
             )}
           />
         </div>
-        <div className="mt-5">
+        <div className="mt-3">
           <FormField
             control={form.control}
             name="password"
@@ -88,7 +90,20 @@ export const Login = () => {
               <FormItem>
                 <FormLabel>Password</FormLabel>
                 <FormControl>
-                  <Input type="password" {...field} />
+                  <div className="relative">
+                    <Input type={isVisible ? "text" : "password"} {...field} />
+                    {isVisible ? (
+                      <Eye
+                        onClick={() => setIsVisible(!isVisible)}
+                        className="absolute top-[calc(50%-12px)] right-2 cursor-pointer"
+                      />
+                    ) : (
+                      <EyeOff
+                        onClick={() => setIsVisible(!isVisible)}
+                        className="absolute top-[calc(50%-12px)] right-2 cursor-pointer"
+                      />
+                    )}
+                  </div>
                 </FormControl>
                 <FormMessage />
               </FormItem>

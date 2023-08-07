@@ -6,7 +6,7 @@ import { signOut } from "next-auth/react";
 export default function HomePage() {
   return (
     <main className="">
-      Home
+      <h1>Home</h1>
       <Button onClick={() => signOut()}>Sign out</Button>
     </main>
   );
