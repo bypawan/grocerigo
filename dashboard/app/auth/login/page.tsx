@@ -2,14 +2,21 @@ import Image from "next/image";
 
 import loginBg from "@/assets/images/login/login-bg.jpg";
 import { Login } from "@/module/auth/login";
+import { getServerSession } from "next-auth";
+import { authOptions } from "@/app/api/auth/[...nextauth]/route";
+import { redirect } from "next/navigation";
 
-export default function LoginPage() {
+export default async function LoginPage() {
+  const session = await getServerSession(authOptions);
+
+  if (session) redirect("/");
+
   return (
     <section className="min-h-screen grid lg:grid-cols-2">
       <div className="flex justify-center items-center px-5">
         <div className="max-w-lg w-full">
           <h1 className="text-3xl font-semibold">Welcome back admin</h1>
-          <Login/>
+          <Login />
         </div>
       </div>
       <div className="hidden lg:block">

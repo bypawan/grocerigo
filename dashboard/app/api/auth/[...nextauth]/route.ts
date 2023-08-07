@@ -1,7 +1,7 @@
 import NextAuth from "next-auth";
 import CredentialsProvider from "next-auth/providers/credentials";
 
-const authOptions = {
+export const authOptions = {
   providers: [
     CredentialsProvider({
       name: "Credentials",
@@ -50,11 +50,12 @@ const authOptions = {
 
       return session;
     },
+  },
 
-    secret: process.env.NEXTAUTH_SECRET,
-    pages: {
-      signIn: "/login",
-    },
+  secret: process.env.NEXTAUTH_SECRET,
+
+  pages: {
+    signIn: "/auth/login",
   },
 };
 
