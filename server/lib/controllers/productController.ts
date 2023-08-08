@@ -28,7 +28,7 @@ export class ProductController {
       try {
         const decodedToken = jwt.verify(
           token as string,
-          "SuperSecret"
+          process.env.JWT_SECRET
         ) as unknown;
 
         user = {
@@ -102,7 +102,7 @@ export class ProductController {
 
     if (token) {
       try {
-        const user = jwt.verify(token, "SuperSecret") as DecodedUser;
+        const user = jwt.verify(token, process.env.JWT_SECRET) as DecodedUser;
         const userRole = user.role;
 
         if (userRole === "ADMIN")
@@ -155,7 +155,7 @@ export class ProductController {
 
       if (token) {
         try {
-          const user = jwt.verify(token, "SuperSecret") as DecodedUser;
+          const user = jwt.verify(token, process.env.JWT_SECRET) as DecodedUser;
           const userRole = user.role;
 
           if (userRole === "ADMIN")
@@ -242,7 +242,7 @@ export class ProductController {
       try {
         const decodedToken = jwt.verify(
           token as string,
-          "SuperSecret"
+          process.env.JWT_SECRET
         ) as unknown;
 
         user = {

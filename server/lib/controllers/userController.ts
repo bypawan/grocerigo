@@ -66,8 +66,7 @@ export class UserController {
             _id: user._id,
             role: user.role,
           },
-          // Add env file here
-          "SuperSecret"
+          process.env.JWT_SECRET
         );
 
         if (Array.isArray(wishlist) && wishlist.length >= 1) {
@@ -173,8 +172,7 @@ export class UserController {
             _id: user._id,
             role: user.role,
           },
-          // Add env file here
-          "SuperSecret"
+          process.env.JWT_SECRET
         );
 
         const responseData = {
@@ -200,7 +198,7 @@ export class UserController {
     try {
       const decodedToken = jwt.verify(
         token as string,
-        "SuperSecret"
+        process.env.JWT_SECRET
       ) as unknown;
 
       user = { _id: (decodedToken as { _id: string | undefined })._id };
