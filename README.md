@@ -1,5 +1,5 @@
 
- <img src="./dashboard/assets/images/logo/logo.jpg" alt="Grocerigo Logo" width="100%" height="100%">
+ <img src="./dashboard/assets/images/logo/logo.png" alt="Grocerigo Logo" width="100%" height="100%">
 
 # Grocerigo
 

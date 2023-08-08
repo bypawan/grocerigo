@@ -42,7 +42,7 @@ class App {
 
   private mongoSetup(): void {
     // mongoose
-    //   .connect("mongodb://127.0.0.1:27017/eCommerce")
+    //   .connect(`${process.env.DB_URL}`)
     //   .then(() => console.log("Mongo DB connected successfully."))
     //   .catch((error) => console.log("Error Connecting!", error));
 

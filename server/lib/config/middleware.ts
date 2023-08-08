@@ -26,7 +26,7 @@ export const hasPermission =
 
     // Add env file here
     try {
-      const user = jwt.verify(token, "SuperSecret") as DecodedUser;
+      const user = jwt.verify(token, process.env.JWT_SECRET) as DecodedUser;
       const userRole = user.role;
 
       if (!userRole || !permissionsWihIndexSignature[userRole][action]) {

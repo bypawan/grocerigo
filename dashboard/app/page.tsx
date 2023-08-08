@@ -1,13 +1,18 @@
 "use client";
 
-import { Button } from "@/components/ui/button";
 import { signOut } from "next-auth/react";
+
+import { Layout } from "@/layout";
+import { Button } from "@/components/ui/button";
 
 export default function HomePage() {
   return (
     <main className="">
-      <h1>Home</h1>
-      <Button onClick={() => signOut()}>Sign out</Button>
+      <div className="text-center">
+        <h1>Home</h1>
+        <Button onClick={() => signOut()}>Sign out</Button>{" "}
+      </div>
+      <Layout />
     </main>
   );
 }
