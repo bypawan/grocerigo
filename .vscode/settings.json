@@ -4,8 +4,10 @@
         "Grocerigo",
         "hookform",
         "Mantine",
+        "navlabel",
         "NEXTAUTH",
         "nextui",
-        "tailwindcss"
+        "tailwindcss",
+        "uuidv"
     ]
 }
