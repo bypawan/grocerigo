@@ -1,9 +1,7 @@
-import { Layout } from "@/layout";
+import { redirect } from "next/navigation";
 
 export default function HomePage() {
-  return (
-    <main className="">
-      <Layout />
-    </main>
-  );
+  redirect("/store/dashboard");
+
+  return null;
 }

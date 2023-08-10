@@ -10,7 +10,7 @@ import loginBg from "@/assets/images/login/login-bg.jpg";
 export default async function LoginPage() {
   const session = await getServerSession(authOptions);
 
-  if (session) redirect("/");
+  if (session) redirect("/store/dashboard");
 
   return (
     <section className="min-h-screen grid lg:grid-cols-2">
