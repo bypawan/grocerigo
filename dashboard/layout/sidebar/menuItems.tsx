@@ -1,79 +1,32 @@
+import * as Icon from "@/components/ui/icons";
 import { v4 as uuidv4 } from "uuid";
 
 const Menuitems = [
   {
-    navlabel: true,
-    subheader: "Home",
+    id: uuidv4(),
+    navLabel: true,
+    title: "Main Menu",
   },
   {
     id: uuidv4(),
+    navItem: true,
     title: "Dashboard",
-    // icon: IconLayoutDashboard,
-    href: "/",
-    // visibility: "superuser,driver,fleetmanager",
+    icon: <Icon.HomeIcon />,
+    href: "/store/dashboard",
   },
   {
     id: uuidv4(),
-    title: "Inbox",
-    // icon: LocationOnIcon,
-    href: "/",
-    // visibility: "superuser,driver,fleetmanager",
+    navItem: true,
+    title: "Orders",
+    icon: <Icon.OrderIcon />,
+    href: "/store/orders",
   },
   {
     id: uuidv4(),
-    title: "Messages",
-    // icon: AddIcCallIcon,
-    href: "/",
-    // visibility: "agent",
-  },
-  {
-    id: uuidv4(),
-    title: "Notifications",
-    // icon: GpsFixedIcon,
-    href: "/",
-    // visibility: "owner",
-  },
-  {
-    navlabel: true,
-    subheader: "Tasks",
-  },
-  {
-    id: uuidv4(),
-    title: "Available Tasks",
-    // icon: LocalShippingIcon,
-    href: "/",
-    // visibility: "owner",
-  },
-  {
-    id: uuidv4(),
-    title: "Clients",
-    // icon: LocalShippingIcon,
-    href: "/",
-    // visibility: "owner",
-  },
-  {
-    navlabel: true,
-    subheader: "Settings",
-  },
-  {
-    id: uuidv4(),
-    title: "Profile",
-    // icon: BusinessIcon,
-    href: "/",
-    // visibility: "superuser",
-  },
-  {
-    id: uuidv4(),
-    title: "Settings",
-    // icon: BusinessIcon,
-    href: "/",
-    // visibility: "superuser",
-  },  {
-    id: uuidv4(),
-    title: "Logout",
-    // icon: BusinessIcon,
-    href: "/",
-    // visibility: "superuser",
+    navItem: true,
+    title: "Products",
+    icon: <Icon.ProductIcon />,
+    href: "/store/products",
   },
 ];
 

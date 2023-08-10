@@ -28,7 +28,7 @@ export const Login = () => {
   const [isVisible, setIsVisible] = useState(false);
 
   useEffect(() => {
-    if (session?.user?.STATUS === "SUCCESS") router.push("/");
+    if (session?.user?.STATUS === "SUCCESS") router.push("/store/dashboard");
   }, [session, router]);
 
   const form = useForm<z.infer<typeof loginSchema>>({
@@ -52,7 +52,7 @@ export const Login = () => {
       });
 
     if (session?.user?.STATUS === "SUCCESS") {
-      router.push("/");
+      router.push("/store/dashboard");
       toast({ description: session.user.MESSAGE });
     }
   };

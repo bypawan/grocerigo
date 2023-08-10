@@ -7,7 +7,7 @@ export default withAuth(
       req.nextUrl.pathname.startsWith("/") &&
       req.nextauth.token?.STATUS !== "SUCCESS"
     )
-      return NextResponse.rewrite(new URL("/auth/login", req.url));
+      return NextResponse.rewrite(new URL("/login", req.url));
   },
   {
     callbacks: {
@@ -17,5 +17,5 @@ export default withAuth(
 );
 
 export const config = {
-  matcher: ["/"],
+  matcher: ["/store/:path*", "/"],
 };
