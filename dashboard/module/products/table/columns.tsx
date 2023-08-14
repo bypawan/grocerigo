@@ -65,8 +65,13 @@ export const ProductColumns: ColumnDef<Product>[] = [
     },
   },
   {
-    accessorKey: "category",
-    header: "Category",
+    accessorKey: "categories",
+    header: "Categories",
+    // cell: ({ row }) => {
+    //   console.log(row.original);
+
+    //   return <h1>hh</h1>;
+    // },
   },
   {
     id: "actions",

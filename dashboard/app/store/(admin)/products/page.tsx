@@ -32,7 +32,6 @@ export default async function ProductsPage({
   const page = searchParams.page ? searchParams.page : 1;
   const products = await getProducts(+page);
 
-
   return (
     <main className="">
       <DataTable
