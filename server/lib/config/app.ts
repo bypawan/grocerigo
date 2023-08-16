@@ -41,11 +41,6 @@ class App {
   }
 
   private mongoSetup(): void {
-    // mongoose
-    //   .connect(`${process.env.DB_URL}`)
-    //   .then(() => console.log("Mongo DB connected successfully."))
-    //   .catch((error) => console.log("Error Connecting!", error));
-
     mongoose
       .connect(`${process.env.DB_URL}`)
       .then(() => console.log("Mongo DB connected successfully."))
