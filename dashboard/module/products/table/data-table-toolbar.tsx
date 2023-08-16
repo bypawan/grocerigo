@@ -74,13 +74,24 @@ export function DataTableToolbar<TData>({
           }
           className="h-8 w-[150px] lg:w-[250px]"
         />
-        {/* {table.getColumn("status") && (
+        {table.getColumn("categories") && (
           <DataTableFacetedFilter
-            column={table.getColumn("status")}
-            title="Status"
-            options={statuses}
+            column={table.getColumn("categories")}
+            title="Categories"
+            options={[
+              {
+                value: "dal",
+                label: "Dal",
+                icon: CrossCircledIcon,
+              },
+              {
+                value: "milk",
+                label: "Milk",
+                icon: CheckCircledIcon,
+              },
+            ]}
           />
-        )} */}
+        )}
         {/* {table.getColumn("priority") && (
           <DataTableFacetedFilter
             column={table.getColumn("priority")}
