@@ -19,8 +19,8 @@ import { useRouter } from "next/navigation";
 
 interface DataTablePaginationProps<TData> {
   table: Table<TData>;
-  currentPage: number;
-  totalPages: number;
+  currentPage?: number;
+  totalPages?: number;
 }
 
 export function DataTablePagination<TData>({
@@ -86,10 +86,10 @@ export function DataTablePagination<TData>({
             className="h-8 w-8 p-0"
             // onClick={() => table.previousPage()}
             // disabled={!table.getCanPreviousPage()}
-            onClick={() => {
-              setPage({ ...page, current: page.current - 1 });
-              router.push(`/store/products?page=${page.current - 1}`);
-            }}
+            // onClick={() => {
+            //   setPage({ ...page, current: page.current - 1 });
+            //   router.push(`/store/products?page=${page.current - 1}`);
+            // }}
             disabled={page.current === 1}
           >
             <span className="sr-only">Go to previous page</span>
@@ -100,10 +100,10 @@ export function DataTablePagination<TData>({
             className="h-8 w-8 p-0"
             // onClick={() => table.nextPage()}
             // disabled={!table.getCanNextPage()}
-            onClick={() => {
-              setPage({ ...page, current: page.current + 1 });
-              router.push(`/store/products?page=${page.current + 1}`);
-            }}
+            // onClick={() => {
+            //   setPage({ ...page, current: page.current + 1 });
+            //   router.push(`/store/products?page=${page.current + 1}`);
+            // }}
             disabled={page.current === page.total}
           >
             <span className="sr-only">Go to next page</span>

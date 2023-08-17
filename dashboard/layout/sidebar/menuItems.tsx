@@ -28,6 +28,13 @@ const Menuitems = [
     icon: <Icon.ProductIcon />,
     href: "/store/products",
   },
+  {
+    id: uuidv4(),
+    navItem: true,
+    title: "Users",
+    icon: <Icon.UserIcon />,
+    href: "/store/users",
+  },
 ];
 
 export default Menuitems;

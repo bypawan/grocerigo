@@ -20,7 +20,7 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en">
-      <body className={montserrat.className}>
+      <body className={`${montserrat.className} container p-0`}>
         <Toaster />
         <AuthProvider>{children}</AuthProvider>
       </body>

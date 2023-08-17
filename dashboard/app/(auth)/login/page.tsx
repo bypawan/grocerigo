@@ -1,8 +1,8 @@
 import Image from "next/image";
 import { redirect } from "next/navigation";
+import { getServerSession } from "next-auth";
 
 import { Login } from "@/module/auth/login";
-import { getServerSession } from "next-auth";
 import { authOptions } from "@/app/api/auth/[...nextauth]/route";
 
 import loginBg from "@/assets/images/login/login-bg.jpg";
