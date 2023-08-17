@@ -6,11 +6,11 @@ import { Checkbox } from "@/components/ui/checkbox";
 import { DataTableRowActions } from "./data-table-row-actions";
 import { DataTableColumnHeader } from "@/components/ui/data-table-column-header";
 
-export type Product = {
+export type User = {
   _id: string;
-  price: number;
   name: string;
-  categories: string[];
+  email: string;
+  role: string;
   isDeleted: boolean;
   modificationNotes: {
     modifiedOn: string;
@@ -19,7 +19,7 @@ export type Product = {
   }[];
 };
 
-export const ProductColumns: ColumnDef<Product>[] = [
+export const UserColumns: ColumnDef<User>[] = [
   {
     id: "select",
     header: ({ table }) => (
@@ -50,27 +50,14 @@ export const ProductColumns: ColumnDef<Product>[] = [
     ),
   },
   {
-    accessorKey: "price",
+    accessorKey: "email",
     header: ({ column }) => (
-      <DataTableColumnHeader column={column} title="Price" />
+      <DataTableColumnHeader column={column} title="Email" />
     ),
-    cell: ({ row }) => {
-      const amount = parseFloat(row.getValue("price"));
-      const formatted = new Intl.NumberFormat("en-IN", {
-        style: "currency",
-        currency: "INR",
-      }).format(amount);
-
-      return <div className="font-medium">{formatted}</div>;
-    },
   },
   {
-    accessorKey: "categories",
-    header: "Categories",
-
-    filterFn: (row, _, value) => {
-      return value.some((val: string) => row.original.categories.includes(val));
-    },
+    accessorKey: "role",
+    header: "Role",
   },
   {
     id: "actions",

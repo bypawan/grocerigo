@@ -22,17 +22,14 @@ export const authOptions = {
             body: JSON.stringify({ email, password }),
           });
 
-          // Check if the response status is not okay
           if (!res.ok) {
             throw new Error("Login failed. Server is having some issues.");
           }
 
-          // Parse the response as JSON
           const user = await res.json();
 
           return user;
         } catch (error) {
-          // Handle errors and log them
           console.error("Error during login:", error);
           return null;
         }

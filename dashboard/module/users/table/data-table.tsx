@@ -29,11 +29,11 @@ import { DataTableToolbar } from "./data-table-toolbar";
 interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[];
   data: TData[];
-  currentPage: number;
-  totalPages: number;
+  currentPage?: number;
+  totalPages?: number;
 }
 
-export function ProductDataTable<TData, TValue>({
+export function UserDataTable<TData, TValue>({
   columns,
   data,
   currentPage,

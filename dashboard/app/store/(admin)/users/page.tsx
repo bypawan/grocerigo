@@ -1,17 +1,17 @@
 import { getServerSession } from "next-auth";
 
 import Error from "./error";
-import { ProductDataTable } from "@/module/products/table/data-table";
+import { UserDataTable } from "@/module/users/table/data-table";
 import { authOptions } from "@/app/api/auth/[...nextauth]/route";
-import { ProductColumns } from "@/module/products/table/columns";
+import { UserColumns } from "@/module/users/table/columns";
 
-async function getProducts(page: number) {
+async function getUsers(page: number) {
   const session = await getServerSession(authOptions);
   const token = session.user.DATA.token;
 
   try {
     const res = await fetch(
-      `${process.env.NEXT_PUBLIC_URL}/api/products?page=${page}`,
+      `${process.env.NEXT_PUBLIC_URL}/api/users?page=${page}`,
       {
         method: "GET",
         headers: { Authorization: `Bearer ${token}` },
@@ -24,30 +24,32 @@ async function getProducts(page: number) {
   }
 }
 
-export default async function ProductsPage({
+export default async function UsersPage({
   searchParams = {},
 }: {
   params: { slug: string };
   searchParams?: { [key: string]: string | string[] | undefined };
 }) {
   const page = searchParams.page ? searchParams.page : 1;
-  const products = await getProducts(+page);
+  const users = await getUsers(+page);
+
+  console.log(users);
 
   return (
     <main>
-      {!products.error && products.message !== "fetch failed" ? (
-        <ProductDataTable
-          columns={ProductColumns}
-          data={products.DATA.products}
-          currentPage={products.DATA.page}
-          totalPages={products.DATA.totalPages}
+      {!users.error && users.message !== "fetch failed" ? (
+        <UserDataTable
+          columns={UserColumns}
+          data={users.DATA}
+          // currentPage={users.DATA.page}
+          // totalPages={users.DATA.totalPages}
         />
       ) : (
         <Error
           error={
-            products.message === "fetch failed"
+            users.message === "fetch failed"
               ? { error: true, message: "Server is offline." }
-              : products
+              : users
           }
         />
       )}

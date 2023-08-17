@@ -1,15 +1,13 @@
 "use client";
 import { z } from "zod";
-import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { Eye, EyeOff } from "lucide-react";
 import { useRouter } from "next/navigation";
+import { useEffect, useState } from "react";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { signIn, getSession, useSession } from "next-auth/react";
 
-import { loginSchema } from "./schema";
-import { Input } from "@/components/ui/input";
-import { useToast } from "@/components/ui/use-toast";
+
 import {
   Form,
   FormControl,
@@ -18,6 +16,9 @@ import {
   FormLabel,
   FormMessage,
 } from "@/components/ui/form";
+import { loginSchema } from "./schema";
+import { Input } from "@/components/ui/input";
+import { useToast } from "@/components/ui/use-toast";
 import { Loader } from "@/components/ui/loader";
 import { Button } from "@/components/ui/button";
 
